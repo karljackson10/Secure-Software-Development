@@ -1,0 +1,178 @@
+##Write a definition for a class named Circle with attributes center and radius, 
+#where center is a Point object and radius is a number.
+
+#Write a function named point_in_circle that takes a Circle and a Point and returns True if the Point lies in or on the boundary of the circle.
+#Write a function named rect_in_circle that takes a Circle and a Rectangle and returns True if the Rectangle lies entirely in or on the boundary of the circle.
+#Write a function named rect_circle_overlap that takes a Circle and a Rectangle and returns True if any of the corners of the Rectangle fall inside the circle. 
+#Or as a more challenging version, return True if any part of the Rectangle falls inside the circle.
+
+#returns distance between points a and b
+def distance_between_points (a,b):
+    
+    distance=math.sqrt( (b.x - a.x)**2 + (b.y - a.y)**2 )
+    
+    return distance
+
+
+### creates and returns a new Rectangle instead of modifying the old one.
+
+def move_rectangle (rect, dx, dy):
+ 
+    rect2=copy.deepcopy (rect)
+    rect2.corner.x +=dx
+    rect2.corner.y +=dy
+
+    return rect2
+
+
+#Write a function named point_in_circle that takes a Circle and a Point and returns True if the Point lies in or on the boundary of the circle.
+def point_in_circle(circ,pt):
+   
+   dist = distance_between_points(circ.center,pt)
+   check = dist<=circ.radius
+   return check
+
+#returns the vertices of a retangle
+def rectangle_vertex(r):
+    corner2 = Point()
+    corner2.x= r.corner.x + r.width
+    corner2.y = r.corner.y
+    corner3 = Point()
+    corner3.x = r.corner.x 
+    corner3.y = r.corner.y + r.height
+    corner4 = Point()
+    corner4.x = r.corner.x + r.width
+    corner4.y = r.corner.y + r.height
+    v=[r.corner, corner2, corner3, corner4]
+    return v 
+ 
+
+
+
+#Write a function named rect_in_circle that takes a Circle and a Rectangle and returns True if the Rectangle lies entirely in or on the boundary of the circle.
+def rect_in_circle(rect,circ):
+   
+    vertex = rectangle_vertex(rect)
+    check = True
+    for x in range(4):
+       if not(point_in_circle(circ, vertex[x])):
+          check=False
+    
+    return check
+
+#Write a function named rect_circle_overlap that takes a Circle and a Rectangle and returns True if any of the corners of the Rectangle fall inside the circle. 
+def rect_circle_overlap (rect, circ):
+    vertex = rectangle_vertex(rect)
+    check = False
+    for x in range(4):
+       if point_in_circle(circ, vertex[x]):
+          check=True
+  
+    return check 
+
+
+##Additional Attributes for the advanced problem
+
+
+def rect_circle_overlap_advanced (rect, circ):
+    #The problem is eaier to solve if the circle is centred at the origin
+    #So, make a copy of the circle and rectange translated (-150,-100)
+    center2 = Point()
+    center2.x=0
+    center2.y=0
+    circle2 = Circle()
+    circle2 = copy.deepcopy(circ)
+    circle2.center=center2
+    rect2 = move_rectangle(rect, -circ.center.x, -circ.center.y)
+    check=False
+    #If the rectangle overlaps the circle then one of the sides must itersect the circumference
+    
+    #Check to see if the top of the rectangle intersects with the circle
+    #Define the equation of the line for the top of the rectange y=rect2.corner.y+rect2.height
+    y=rect2.corner.y + rect2.height
+    #For the line to intersect x^2 = r^2 - y^2, So r^2-y^2>=0
+    if circ.radius**2 - y**2 >=0:
+        x=math.sqrt(circ.radius**2 - y**2)
+        #For the side to intersect, x must be within the boundaries of the side of the rectangle
+        if x>=min(rect2.corner.x, rect2.corner.x+rect.width) and x<=max(rect2.corner.x, rect2.corner.x+rect.width):
+           check=True
+    #Repeat for the bottom side of the rectangle
+    y=rect2.corner.y - rect2.height
+    if circ.radius**2 - y**2 >=0:
+        x=math.sqrt(circ.radius**2 - y**2)
+        if x>=min(rect2.corner.x, rect2.corner.x+rect.width) and x<=max(rect2.corner.x, rect2.corner.x+rect.width):
+           check=True
+    #Define the equation of the line for the right side of the rectange x=rect2.corner.x+rect2.width
+    x=rect2.corner.x + rect2.width
+    #For the line to intersect y^2 = r^2 - x^2, So r^2-x^2>=0
+    if circ.radius**2 - x**2 >=0:
+       y=math.sqrt(circ.radius**2 - x**2)
+       #For the side to intersect, x must be within the boundaries of the side of the rectangle
+       if y>=min(rect2.corner.y, rect2.corner.y+rect.height) and y<=max(rect2.corner.y, rect2.corner.y+rect.height):
+          check=True
+    #Repeat for the left side of the rectangle
+    x=rect2.corner.x - rect2.width
+    if circ.radius**2 - x**2 >=0:
+       y=math.sqrt(circ.radius**2 - x**2)
+       if y>=min(rect2.corner.y, rect2.corner.y+rect.height) and y<=max(rect2.corner.y, rect2.corner.y+rect.height):
+          check=True
+    return check
+#Main
+import math
+import copy
+
+class Circle:
+   """represents a circle
+    attributes: center and radius"""
+
+class Point:
+   """represents a coordinate"""
+
+
+class Rectangle:
+    """Represents a rectange
+        attributes: width, height, corner"""
+
+
+circle=Circle()
+center=Point()
+#Instantiate a Circle object that represents a circle with its center at   (150,100) and radius 75.
+center.x=150
+center.y=100
+circle.center = center
+circle.radius = 75
+# Input a Point
+point1=Point()
+point1.x =float(input('point1 (x):'))
+point1.y =float(input('point1 (y):'))
+
+if point_in_circle(circle, point1):
+   print('Point 1 is inside the circle')
+else:
+   print('Point1 is outside of the circle')
+
+
+### Define box as a Rectangle
+
+box = Rectangle()
+box.width = float(input('box width:'))
+box.height = float(input('box height'))
+box.corner = Point()
+box.corner.x = float(input('corner(x):'))
+box.corner.y= float(input('corner (y):'))
+
+if rect_in_circle(box,circle):
+   print('Rectangle is completly inside the circle')
+else:
+   print('At least part of the Rectangle is outside of the circle')
+
+if rect_circle_overlap(box,circle):
+   print('At least 1 corner of the Rectangle is inside the circle')
+else:
+   print('The corners of the Rectangle are outside of the circle')
+
+if rect_circle_overlap_advanced(box,circle):
+   print('The Rectangle overlaps circle')
+else:
+   print('Rectangle is outside of the circle')
+
