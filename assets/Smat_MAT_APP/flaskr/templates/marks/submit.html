@@ -1,0 +1,17 @@
+<!--builds on the base template-->
+{% extends 'base.html' %}
+
+<!--page title-->
+{% block header %}
+  <h1>{% block title %}Submit Assignment | {{ work['title'] }}{% endblock %}</h1>
+{% endblock %}
+
+<!--form to submit student work-->
+{% block content %}
+  <form method="post">
+    <label for="work">Submission</label>
+    <textarea name="work" id="work">{{ request.form['work'] or work['work'] }}</textarea>
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+{% endblock %}

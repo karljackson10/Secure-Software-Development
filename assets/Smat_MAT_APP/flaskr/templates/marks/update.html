@@ -1,0 +1,23 @@
+<!--builds on the base template-->
+{% extends 'base.html' %}
+
+<!--page title-->
+{% block header %}
+{% for title in title %}
+  <h1>{% block title %}Edit |  {{ title['title'] }}  {% endblock %}</h1>
+{% endfor %}
+{% endblock %}
+
+<!--form to update marks and feedback-->
+{% block content %}
+  <form method="post">
+    <label for="mark">Mark</label>
+    <input name="mark" id="mark"
+      value="{{ request.form['mark'] or marks['mark'] }}" >
+    <label for="feedback">Feedback</label>
+    <textarea name="feedback" id="feedback">{{ request.form['feedback'] or marks['feedback'] }}</textarea>
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+ 
+{% endblock %}  

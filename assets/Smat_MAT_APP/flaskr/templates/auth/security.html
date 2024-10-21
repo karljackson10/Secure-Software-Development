@@ -1,0 +1,20 @@
+<!--builds on the base template-->
+{% extends 'base.html' %}
+
+<!--page title-->
+{% block header %}
+  <h1>{% block title %}Security | {{secure['status']}}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<h1>
+  <!--form to select security-->
+   <form method="post">       
+    <!--if security status is on, display the checkbox with a tick-->
+    <span><input type="checkbox" id="security" name="security" value=True 
+      {%if secure['status'] ==1 %}checked {%endif%}>
+    <label for="security">Security</label></span>
+    <input type="submit" value="OK">
+   </form>    
+</h1>   
+{% endblock %}

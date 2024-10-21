@@ -1,0 +1,20 @@
+<!--builds on the base template-->
+{% extends 'base.html' %}
+
+<!--page title-->
+{% block header %}
+  <h1>{% block title %}Register{% endblock %}</h1>
+{% endblock %}
+
+<!--form to register a new user-->
+{% block content %}
+  <form method="post">
+    <label for="username">Username</label>
+    <input name="username" id="username" required>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+    <label for="user_role">Role(Student/Teacher/Admin)</label>
+    <input type="user_role" name="user_role" id="user_role" required>
+    <input type="submit" value="Register">
+  </form>
+{% endblock %}

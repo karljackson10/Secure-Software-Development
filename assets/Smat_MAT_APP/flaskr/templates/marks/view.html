@@ -1,0 +1,48 @@
+<!--builds on the base template-->
+{% extends 'base.html' %}
+
+<!--page title-->
+{% block header %}
+  <h1>{% block title %}Marks{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <!--displays the assignment tile and number-->
+  <h1> {{ post ['title'] }} | {{assignment}}</h1>
+    <!--link to the assign page-->
+    <a class="action" href="{{ url_for('marks.assign', id=post['id'] ) }}">Assign</a>
+  
+  <article class="post">
+    <header>
+      <!--displays a table of all studnet marks for the assignment-->
+      <table>
+          <!--table headers-->
+        <thead>
+          <tr>
+            <th class="cl1">ID</th>
+            <th class="cl1">Student</th>
+            <th class="cl1"> Mark</th>
+            <th class="cl1"> Work</th>
+            <th class="cl1"> Feedback</th>
+            <th class="cl1"> Action</th>
+          </tr>
+        </thead>
+        <!--each student's marks are displayed as a new row-->
+        {% for mark in marks %}
+          <tr><td class="cl2">{{ mark['student_id'] }} </td> 
+              <td>{{ mark['username'] }} </td>
+              <td> {{ mark['mark']}} </td>
+              <td> {{mark['work']}}</td>
+              <td> {{mark['feedback']}} </td>
+              <td>  
+                <!--Admin or authors can access the link to edit marks and feedback-->
+                {% if g.user['id'] == post['author_id'] or g.user['user_role']=='Admin' %}
+                  <a class="action" href="{{ url_for('marks.update', assignment=assignment, student=mark['student_id'] ) }}">Edit</a>
+                {% endif %}
+              </td>
+          </tr>
+        {% endfor %}
+      </table>
+    </header>
+  </article>
+{% endblock %}

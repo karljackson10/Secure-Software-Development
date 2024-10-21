@@ -1,0 +1,68 @@
+<!--builds on the base template-->
+{% extends 'base.html' %}
+
+<!--page title-->
+{% block header %}
+  <h1>{% block title %}Assign{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <h1> {{ post ['title']}}  </h1>
+      <a class="action" href="{{ url_for('marks.view', id=assignment ) }}">View</a>
+    <article class="post">
+      <header>
+        <!--markbook table-->
+        <table>
+          <thead>
+            <tr>
+              <th class="cl1">ID</th>
+              <th class="cl1">Student</th>
+              <th class="cl1"> Mark</th>
+              <th class="cl1"> Feedback</th>
+              <th class="cl1"> Assigned</th>
+              <th class="cl1"> Assign</th>
+              <th class="cl1"> Remove</th>
+            </tr>
+          </thead>
+
+        <!--displays all of the marks for all students-->  
+        {% for mark in marks %}
+          <tr><td class="cl2">{{ mark['id'] }} </td> 
+              <td>{{ mark['username'] }} </td>
+              <td> {{ mark['mark']}} </td>
+              <td> {{mark['feedback']}} </td>        
+              <td>
+                  <!--displays a tick if the assigment is allocated-->
+                  {% if mark['assignment_id']!= None %}
+                    &#10003
+                  {% else %}    
+                  {% endif %}                  
+              </td>
+              <td>
+                  <!--the assign button will only be available to Admiin or assigment owners-->           
+                  {% if g.user['id'] == post['author_id'] or g.user['user_role'] =='Admin' %}
+                    <!--displays assign button if not assigned and not logged in which only shows if security is off-->
+                    {% if mark['assignment_id'] == None and g.user == None  %}
+                      <button><a class="action" href="{{ url_for('marks.add_assignment', staff=1, assignment=assignment, student =post['id']) }}">  </a></button>
+                    {% endif %}
+                    <!--displays assign button if logged in and the assignemnt is not allocated-->
+                    {% if mark['assignment_id'] == None and g.user != None  %}
+                        <button><a class="action" href="{{ url_for('marks.add_assignment', staff=g.user['id'], assignment=assignment, student =mark['id']) }}">  </a></button>    
+                    {% endif %}    
+                  {% endif %}
+                  </td>
+
+                  <td>
+                    <!--only display remove button if the user is an Admin or the author-->
+                    {% if g.user['id'] == post['author_id'] or g.user['user_role'] =='Admin' %}
+                        <!--displays remove button if the assignemnet is allocated-->
+                        {% if mark['assignment_id']!= None %}
+                          <button><a class="action" href="{{ url_for('marks.remove_assignment', assignment=assignment, student =mark['id']) }}">  </a></button>
+                        {% endif %}
+                    {% endif %}</td>
+          </tr>
+        {% endfor %}
+        </table>
+      </header>     
+    </article> 
+{% endblock %}

@@ -1,0 +1,25 @@
+<!--builds on the base template-->
+{% extends 'base.html' %}
+
+<!--page title-->
+{% block header %}
+  <h1>{% block title %}Menu{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <!--displays each menu item as a hyperlink-->
+  {% for item in menu %}
+    <article class="post">
+      <header>
+        <div>
+          <h1>
+            <a class="action" href={{item['link']}}>{{item['choice']}}</a></h1>
+        </div>
+      </header>
+    </article>
+    <!--divider between items-->
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

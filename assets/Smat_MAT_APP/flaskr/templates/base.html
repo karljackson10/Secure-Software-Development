@@ -1,0 +1,37 @@
+<!doctype html>
+
+<!--the base template is used for all pages-->
+
+<!--adds - Smart MAT to the page title-->
+<title>{% block title %}{% endblock %} - Smart MAT</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<!--page title and navigation-->
+<nav>
+  <h1>Smart MAT</h1>
+  
+  <!--if a user is logged in, display links to menu and log out-->
+  <ul>
+    {% if g.user %}
+      <li><span>{{ g.user['username'] }}</span>
+      
+      <li><a href="{{url_for('auth.display_menu')}}">Main Menu</a>  
+      <li><a href="{{ url_for('auth.logout') }}">Log Out</a>  
+    {% else %}
+  
+  <!--if not logged in show link to login-->  
+      <li><a href="{{ url_for('auth.login') }}">Log In</a>
+    {% endif %}
+  </ul>
+
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  <!--display any flash messages-->
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</section>

@@ -1,0 +1,25 @@
+<!--builds on the base template-->
+{% extends 'base.html' %}
+
+<!--page title-->
+{% block header %}
+  <h1>{% block title %}Change Password |  {{ user['username'] }}{% endblock %}</h1>
+{% endblock %}
+
+<!--form to update the user password-->
+{% block content %}
+  <form method="post">
+    <label for="title">Password</label>
+    <input name="password" id="password"
+      value="{{ request.form['password'] }}" required>
+    
+    <!--Admin can change the username details-->
+    {% if g.user['user_role']=='Admin' or g.user==None %}
+        <label for="title">Username</label>
+        <input name="username" id="username"
+            value="{{ request.form['password'] or user['username']}}" >        
+    {% endif %}
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+{% endblock %}

@@ -1,0 +1,31 @@
+<!--builds on the base template-->
+{% extends 'base.html' %}
+
+<!--page title-->
+{% block header %}
+    <h1>{% block title %}Marks{% endblock %}  </h1> 
+{% endblock %}
+
+
+{% block content %}
+  <!--lists all of the assignments-->
+  {% for post in posts %}
+    <article class="post">
+      <header>
+        <div>
+          <h1>{{post['id']}} | {{ post['title'] }} </h1>
+          <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+        </div>
+        <!--Admin and authors will see the link to view or assign-->
+        {% if g.user['id'] == post['author_id'] or g.user['user_role']=='Admin' or g.user==None %}
+        <a class="action" href="{{ url_for('marks.assign', id=post['id']) }}">Assign</a>
+        <a class="action" href="{{ url_for('marks.view', id=post['id']) }}">View</a>
+        {% endif %}
+      </header>
+    </article>
+    <!--divider between assignments-->
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

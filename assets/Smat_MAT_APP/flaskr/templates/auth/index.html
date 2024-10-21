@@ -1,0 +1,30 @@
+<!--builds on the base template-->
+{% extends 'base.html' %}
+
+<!--page title-->
+{% block header %}
+  <h1>{% block title %}Users{% endblock %}</h1>
+  <a class="action" href="{{ url_for('auth.register') }}">New User</a>
+{% endblock %}
+
+{% block content %}
+<br>
+<!--table to show all users-->
+<table>
+  {% for user in users %}
+        <tr>
+          <td style="width:45%"><h1 align = "left"> {{user['id']}} | {{ user['username'] }} </h1></td>
+          <td style="width:20%"><div class="about">Role: {{ user['user_role'] }} </div></td>
+          <td style="width:20%"> <a class="action" href="{{ url_for('auth.update', id=user['id']) }}">Edit</a></td>
+          <td>
+            <!--delete option for Admin users
+            the none arguement applies if security is off-->
+            {% if  g.user['user_role']=='Admin' or g.user==None %}
+              <form align = "center" action="{{ url_for('auth.delete', id=user['id']) }}" method="post">
+              <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');"></form>
+            {% endif %}
+          </td>
+        </tr>
+  {% endfor %}
+</table>
+{% endblock %}
